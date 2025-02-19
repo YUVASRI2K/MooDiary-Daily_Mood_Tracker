@@ -1,4 +1,5 @@
-#Daily Mood Tracker
+Daily Mood Tracker
+
 🌟 Overview
 
 The Daily Mood Tracker is a simple web application that allows users to track their mood each day. It stores the mood history using local storage, providing a seamless and persistent user experience.
