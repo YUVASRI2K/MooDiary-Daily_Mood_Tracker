@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Mood Tracker</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            text-align: center; 
+            padding: 20px; 
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffdde1);
+            animation: backgroundAnimation 10s infinite alternate;
+        }
+        @keyframes backgroundAnimation {
+            0% { background-position: left; }
+            100% { background-position: right; }
+        }
+        .mood-container { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        .mood { font-size: 2rem; cursor: pointer; transition: transform 0.2s; }
+        .mood:hover { transform: scale(1.2); }
+        #mood-history { margin-top: 30px; }
+        .delete-btn { margin-left: 10px; cursor: pointer; color: red; font-weight: bold; }
+        button { margin-top: 15px; padding: 8px 16px; border: none; background: #ff6f61; color: white; font-size: 16px; cursor: pointer; border-radius: 5px; }
+        button:hover { background: #e65c50; }
+    </style>
+</head>
+<body>
+    <h1>Daily Mood Tracker</h1>
+    <p>Select your mood for today:</p>
+    <div class="mood-container">
+        <span class="mood" onclick="saveMood('😀')">😀</span>
+        <span class="mood" onclick="saveMood('😊')">😊</span>
+        <span class="mood" onclick="saveMood('😐')">😐</span>
+        <span class="mood" onclick="saveMood('😢')">😢</span>
+        <span class="mood" onclick="saveMood('😡')">😡</span>
+    </div>
+    <h2>Mood History</h2>
+    <ul id="mood-history"></ul>
+    <button onclick="clearHistory()">Clear All</button>
+
+    <script>
+        function saveMood(mood) {
+            const date = new Date().toLocaleDateString();
+            const moodEntry = { date, mood };
+            let moods = JSON.parse(localStorage.getItem('moods')) || [];
+            moods.push(moodEntry);
+            localStorage.setItem('moods', JSON.stringify(moods));
+            displayMoods();
+        }
+
+        function deleteMood(index) {
+            let moods = JSON.parse(localStorage.getItem('moods')) || [];
+            moods.splice(index, 1);
+            localStorage.setItem('moods', JSON.stringify(moods));
+            displayMoods();
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('moods');
+            displayMoods();
+        }
+
+        function displayMoods() {
+            const moodHistory = document.getElementById('mood-history');
+            moodHistory.innerHTML = '';
+            let moods = JSON.parse(localStorage.getItem('moods')) || [];
+            moods.forEach((entry, index) => {
+                let li = document.createElement('li');
+                li.textContent = `${entry.date}: ${entry.mood}`;
+                let deleteBtn = document.createElement('span');
+                deleteBtn.textContent = ' ❌';
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.onclick = () => deleteMood(index);
+                li.appendChild(deleteBtn);
+                moodHistory.appendChild(li);
+            });
+        }
+
+        window.onload = displayMoods;
+    </script>
+</body>
+</html>
